@@ -1,0 +1,27 @@
+<launch>
+  <arg name="libraries_list" default="[skiros2_examples]"/>
+  <arg name="primitive_list" default="[test_action_skill]"/>
+  <arg name="skill_list" default="[]" />
+  <arg name="debug" default="false"/>
+
+  <node launch-prefix="xterm -geometry 100x60+1280+0 -hold -e" pkg="skiros2_examples" type="test_action_server" name="as"/>
+
+  <include file="$(find skiros2)/launch/world_model_server.launch">
+      <arg name="init_scene" value=""/>
+      <arg name="verbose" value="false"/>
+      <arg name="gui" value="true"/>
+      <arg name="reasoners_pkgs" value="[skiros2_std_reasoners]"/>
+      <arg name="workspace_dir" value="$(find skiros2)/owl"/>
+      <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <include file="$(find skiros2)/launch/skill_mgr.launch">
+      <arg name="verbose" value="false"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="libraries_list" value="$(arg libraries_list)"/>
+      <arg name="primitive_list" value="$(arg primitive_list)"/>
+      <arg name="skill_list" value="$(arg skill_list)" />
+      <arg name="robot_ontology_prefix" value=""/>
+      <arg name="robot_name" value="test_robot"/>
+  </include>
+</launch>

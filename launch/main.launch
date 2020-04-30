@@ -1,0 +1,41 @@
+<launch>
+  <arg name="primitive_list" default="[pose_generator, linear_mover, pose_follower]"/>
+  <arg name="skill_list" default="[locate_fake, drive_fake, pick_fake, place_fake, follow_pose]"/>
+
+  <arg name="hardware_interface" default="PositionJointInterface" />
+  <arg name="robot_ontology_prefix" default="" />
+  <arg name="robot_name" default="test_robot" />
+  <arg name="model" default="iiwa_psa"/>
+  <arg name="run_rviz" default="false" />
+  <arg name="deploy" default="true" />
+  <arg name="gui" default="false"/>
+  <arg name="init_scene" default=""/>
+
+
+  <group if="$(arg run_rviz)">
+      <node name="rviz" pkg="rviz" type="rviz" args="-d $(find skiros2_examples)/config/config.rviz" output="screen">
+      </node>
+  </group>
+
+  <arg name="debug" default="false"/>
+  <include file="$(find skiros2)/launch/world_model_server.launch">
+      <arg name="init_scene" value="$(arg init_scene)"/>
+      <arg name="verbose" value="false"/>
+      <arg name="gui" value="$(arg gui)"/>
+      <arg name="reasoners_pkgs" value="[skiros2_std_reasoners]"/>
+      <arg name="workspace_dir" value="$(find skiros2_examples)/owl"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="deploy" value="$(arg deploy)"/>
+  </include>
+
+  <include file="$(find skiros2)/launch/skill_mgr.launch">
+      <arg name="verbose" value="false"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="libraries_list" value="[skiros2_examples, skiros2_std_skills]"/>
+      <arg name="primitive_list" value="$(arg primitive_list)"/>
+      <arg name="skill_list" value="$(arg skill_list)" />
+      <arg name="robot_ontology_prefix" value="$(arg robot_ontology_prefix)"/>
+      <arg name="robot_name" value="$(arg robot_name)"/>
+      <arg name="deploy" value="$(arg deploy)"/>
+  </include>
+</launch>

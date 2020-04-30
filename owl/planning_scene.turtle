@@ -1,0 +1,90 @@
+@prefix SUMO: <http://www.semanticweb.org/ontologies/2013/7/RobotsAutomation.owl#SUMO:> .
+@prefix cora: <http://www.inf.ufrgs.br/phi-group/ontologies/cora.owl#> .
+@prefix coraX: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX#> .
+@prefix coraX1: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX.owl#> .
+@prefix corax: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rparts: <http://www.inf.ufrgs.br/phi-group/ontologies/RParts.owl#> .
+@prefix skiros: <http://rvmi.aau.dk/ontologies/skiros.owl#> .
+@prefix sumo: <http://www.inf.ufrgs.br/phi-group/ontologies/sumo.owl#> .
+@prefix tts: <http://rvmi.aau.dk/ontologies/tts.owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+skiros:Drive a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:Locate a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:Pick a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:Place a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:Scene-0 a skiros:Scene,
+        owl:NamedIndividual ;
+    rdfs:label "" ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "map"^^xsd:string ;
+    skiros:OrientationW "1.0"^^xsd:float ;
+    skiros:OrientationX "0.0"^^xsd:float ;
+    skiros:OrientationY "0.0"^^xsd:float ;
+    skiros:OrientationZ "0.0"^^xsd:float ;
+    skiros:PositionX "0.0"^^xsd:float ;
+    skiros:PositionY "0.0"^^xsd:float ;
+    skiros:PositionZ "0.0"^^xsd:float ;
+    skiros:contain skiros:LargeBox-51,
+        skiros:LargeBox-80.
+
+skiros:TaskPlan a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:LargeBox-51 a skiros:LargeBox,
+        owl:NamedIndividual ;
+    rdfs:label "start_box" ;
+    skiros:BaseFrameId ""^^xsd:string ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "skiros:LargeBox-51"^^xsd:string ;
+    skiros:PublishTf true ;
+    skiros:Template "skiros:large_box_test_starter"^^xsd:string ;
+    skiros:contain skiros:Starter-145,
+        skiros:Starter-52 ;
+    skiros:hasTemplate skiros:large_box_test_starter .
+
+skiros:LargeBox-80 a skiros:LargeBox,
+        owl:NamedIndividual ;
+    rdfs:label "target_box" ;
+    skiros:BaseFrameId ""^^xsd:string ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "skiros:LargeBox-80"^^xsd:string ;
+    skiros:PublishTf true ;
+    skiros:Template "skiros:large_box_test_starter"^^xsd:string ;
+    skiros:hasTemplate skiros:large_box_test_starter .
+
+skiros:Starter-145 a skiros:Starter,
+        owl:NamedIndividual ;
+    rdfs:label "starter2" ;
+    skiros:BaseFrameId ""^^xsd:string ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "skiros:Starter-145"^^xsd:string ;
+    skiros:PublishTf true ;
+    skiros:Template "skiros:starter"^^xsd:string ;
+    skiros:Weight "3.0"^^xsd:float ;
+    skiros:hasTemplate skiros:starter .
+
+skiros:Starter-52 a skiros:Starter,
+        owl:NamedIndividual ;
+    rdfs:label "starter1" ;
+    skiros:BaseFrameId ""^^xsd:string ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "skiros:Starter-52"^^xsd:string ;
+    skiros:PublishTf true ;
+    skiros:Template "skiros:starter"^^xsd:string ;
+    skiros:Weight "3.0"^^xsd:float ;
+    skiros:hasTemplate skiros:starter .
+

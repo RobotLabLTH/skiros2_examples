@@ -1,0 +1,41 @@
+#! /usr/bin/env python
+import rospy
+import actionlib
+from actionlib.msg import TestAction, TestFeedback, TestResult
+
+class ExampleActionServer(object):
+  """
+  Just count to 20 starting from the goal integer
+  """
+  def __init__(self):
+    # Init server
+    rospy.init_node('test_action_server')
+    self.server = actionlib.SimpleActionServer('test_action_server', TestAction, execute_cb = self.execute, auto_start = False)
+    self.rate = rospy.Rate(10.0)
+    self.feedback = TestFeedback()
+    self.result = TestResult()
+    self.server.start()
+
+  def execute(self, goal):
+    self.state = 'initializing'
+    rospy.loginfo('state: ' + self.state)
+    self.counter = goal.goal
+    while (not self.server.is_preempt_requested()) and (not rospy.is_shutdown()):
+      self.counter += 1
+      self.feedback.feedback = self.counter
+      self.server.publish_feedback(self.feedback)
+      self.rate.sleep()
+      if self.counter > 20:
+          self.result.result = self.counter
+          self.server.set_succeeded(self.result)
+          self.state = 'inactive'
+          rospy.loginfo('state: ' + self.state)
+          return
+
+    self.server.set_preempted()
+    self.state = 'inactive'
+    rospy.loginfo('state: ' + self.state)
+
+if __name__ == '__main__':
+  server = ExampleActionServer()
+  rospy.spin()

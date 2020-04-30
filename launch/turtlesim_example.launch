@@ -1,0 +1,29 @@
+<launch>
+  <arg name="primitive_list" default="[]"/>
+  <arg name="skill_list" default="[spawn_random, move, patrol, follow, orbit]"/>
+  <arg name="debug" default="false"/>
+  <arg name="deploy" default="true"/>
+
+  <node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
+
+  <include file="$(find skiros2)/launch/world_model_server.launch">
+      <arg name="init_scene" value=""/>
+      <arg name="verbose" value="false"/>
+      <arg name="gui" value="true"/>
+      <arg name="reasoners_pkgs" value="[skiros2_std_reasoners]"/>
+      <arg name="workspace_dir" value="$(find skiros2_examples)/owl"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="deploy" value="$(arg deploy)"/>
+  </include>
+
+  <include file="$(find skiros2)/launch/skill_mgr.launch">
+      <arg name="verbose" value="false"/>
+      <arg name="debug" value="$(arg debug)"/>
+      <arg name="libraries_list" value="[skiros2_examples, skiros2_std_skills]"/>
+      <arg name="primitive_list" value="$(arg primitive_list)"/>
+      <arg name="skill_list" value="$(arg skill_list)" />
+      <arg name="robot_ontology_prefix" value="turtlebot"/>
+      <arg name="robot_name" value="turtle_robot"/>
+      <arg name="deploy" value="$(arg deploy)"/>
+  </include>
+</launch>
