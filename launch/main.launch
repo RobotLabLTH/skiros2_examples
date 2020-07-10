@@ -1,6 +1,14 @@
 <launch>
-  <arg name="primitive_list" default="[pose_generator, linear_mover, pose_follower]"/>
-  <arg name="skill_list" default="[locate_fake, drive_fake, pick_fake, place_fake, follow_pose]"/>
+  <arg name="skill_list" default="[
+                                    pose_generator,
+                                    linear_mover,
+                                    pose_follower,
+                                    locate_fake,
+                                    drive_fake,
+                                    pick_fake,
+                                    place_fake,
+                                    follow_pose
+                                  ]"/>
 
   <arg name="hardware_interface" default="PositionJointInterface" />
   <arg name="robot_ontology_prefix" default="" />
@@ -32,7 +40,6 @@
       <arg name="verbose" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="libraries_list" value="[skiros2_examples, skiros2_std_skills]"/>
-      <arg name="primitive_list" value="$(arg primitive_list)"/>
       <arg name="skill_list" value="$(arg skill_list)" />
       <arg name="robot_ontology_prefix" value="$(arg robot_ontology_prefix)"/>
       <arg name="robot_name" value="$(arg robot_name)"/>

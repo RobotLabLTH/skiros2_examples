@@ -1,5 +1,4 @@
 <launch>
-  <arg name="primitive_list" default="[]"/>
   <arg name="skill_list" default="[spawn_random, move, patrol, follow, orbit]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
@@ -20,7 +19,6 @@
       <arg name="verbose" value="false"/>
       <arg name="debug" value="$(arg debug)"/>
       <arg name="libraries_list" value="[skiros2_examples, skiros2_std_skills]"/>
-      <arg name="primitive_list" value="$(arg primitive_list)"/>
       <arg name="skill_list" value="$(arg skill_list)" />
       <arg name="robot_ontology_prefix" value="turtlebot"/>
       <arg name="robot_name" value="turtle_robot"/>

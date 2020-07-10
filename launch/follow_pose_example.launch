@@ -1,7 +1,13 @@
 <launch>
   <include file="$(find skiros2_examples)/launch/main.launch">
-    <arg name="primitive_list" value="[pose_generator, pose_follower_one_axis, pose_follower_two_axis, pose_follower_three_axis, pose_circle_mover]"/>
-    <arg name="skill_list" value="[follow_pose]" />
+    <arg name="skill_list" value="[
+                                    pose_generator,
+                                    pose_follower_one_axis,
+                                    pose_follower_two_axis,
+                                    pose_follower_three_axis,
+                                    pose_circle_mover,
+                                    follow_pose
+                                    ]" />
     <arg name="run_rviz" value="true" />
     <arg name="deploy" value="true" />
     <arg name="gui" value="true"/>
