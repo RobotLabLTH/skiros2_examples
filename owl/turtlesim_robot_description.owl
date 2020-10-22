@@ -12,6 +12,12 @@
         <owl:imports rdf:resource="http://rvmi.aau.dk/ontologies/skiros.owl"/>
     </owl:Ontology>
 
+    
+    <!-- http://rvmi.aau.dk/ontologies/turtlebot.owl#Turtle -->
+
+    <owl:Class rdf:about="http://rvmi.aau.dk/ontologies/turtlebot.owl#Turtle">
+        <rdfs:subClassOf rdf:resource="http://www.inf.ufrgs.br/phi-group/ontologies/cora.owl#Robot"/>
+    </owl:Class>
 
     <!--
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -34,20 +40,27 @@
      -->
 
 
-    <!-- http://rvmi.aau.dk/ontologies/skiros.owl#turtle_robot -->
+    <!-- http://rvmi.aau.dk/ontologies/skiros.owl#skill_mgr -->
 
-    <owl:NamedIndividual rdf:about="http://rvmi.aau.dk/ontologies/turtlebot.owl#turtle_robot">
+    <owl:NamedIndividual rdf:about="http://rvmi.aau.dk/ontologies/turtlebot.owl#skill_mgr">
         <rdf:type rdf:resource="http://www.inf.ufrgs.br/phi-group/ontologies/cora.owl#Robot"/>
         <skiros:DiscreteReasoner>AauSpatialReasoner</skiros:DiscreteReasoner>
-        <skiros:SkillMgr>/turtlebot_robot</skiros:SkillMgr>
-        <TurtleName>/turtle1</TurtleName>
+        <skiros:SkillMgr>/skill_mgr</skiros:SkillMgr>
+    </owl:NamedIndividual>
+
+    <!-- http://rvmi.aau.dk/ontologies/turtlebot.owl#turtle -->
+
+    <owl:NamedIndividual rdf:about="http://rvmi.aau.dk/ontologies/turtlebot.owl#turtle">
+        <rdf:type rdf:resource="http://rvmi.aau.dk/ontologies/turtlebot.owl#Turtle"/>
         <skiros:DiscreteReasoner>AauSpatialReasoner</skiros:DiscreteReasoner>
+        <turtlebot:TurtleName></turtlebot:TurtleName>
+
         <skiros:OrientationW rdf:datatype="http://www.w3.org/2001/XMLSchema#float">1</skiros:OrientationW>
         <skiros:OrientationX rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:OrientationX>
         <skiros:OrientationY rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:OrientationY>
         <skiros:OrientationZ rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:OrientationZ>
         <skiros:PositionX rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:PositionX>
         <skiros:PositionY rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:PositionY>
-        <skiros:PositionZ rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:PositionZ>
+        <skiros:PositionZ rdf:datatype="http://www.w3.org/2001/XMLSchema#float">0</skiros:PositionZ>        
     </owl:NamedIndividual>
 </rdf:RDF>

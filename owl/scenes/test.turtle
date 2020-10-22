@@ -1,0 +1,206 @@
+@prefix : <> .
+@prefix SUMO: <http://www.semanticweb.org/ontologies/2013/7/RobotsAutomation.owl#SUMO:> .
+@prefix cora: <http://www.inf.ufrgs.br/phi-group/ontologies/cora.owl#> .
+@prefix coraX: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX.owl#> .
+@prefix coraX1: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX#> .
+@prefix corax: <http://www.inf.ufrgs.br/phi-group/ontologies/coraX.owl#> .
+@prefix default1: <> .
+@prefix default2: <> .
+@prefix default3: <> .
+@prefix default4: <> .
+@prefix default5: <> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix owl2xml: <http://www.w3.org/2006/12/owl2-xml#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rparts: <http://www.inf.ufrgs.br/phi-group/ontologies/RParts.owl#> .
+@prefix skiros: <http://rvmi.aau.dk/ontologies/skiros.owl#> .
+@prefix sumo: <http://www.inf.ufrgs.br/phi-group/ontologies/sumo.owl#> .
+@prefix turtlebot: <http://rvmi.aau.dk/ontologies/turtlebot.owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+skiros:Scene-0 a skiros:Scene,
+        owl:NamedIndividual ;
+    rdfs:label "" ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "map"^^xsd:string ;
+    skiros:OrientationW "1.0"^^xsd:float ;
+    skiros:OrientationX "0.0"^^xsd:float ;
+    skiros:OrientationY "0.0"^^xsd:float ;
+    skiros:OrientationZ "0.0"^^xsd:float ;
+    skiros:PositionX "0.0"^^xsd:float ;
+    skiros:PositionY "0.0"^^xsd:float ;
+    skiros:PositionZ "0.0"^^xsd:float ;
+    skiros:contain cora:Robot-1 .
+
+skiros:AutoConnect a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimSkills .
+
+skiros:AutoConnect-18 a skiros:AutoConnect,
+        owl:NamedIndividual ;
+    rdfs:label "autoconnect" ;
+    skiros:hasParam skiros:Parameter-19 .
+
+skiros:Command a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Command-14 a skiros:Command,
+        owl:NamedIndividual ;
+    rdfs:label "command" ;
+    skiros:hasParam skiros:Parameter-15 .
+
+skiros:Connect a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimPrimitives .
+
+skiros:Connect-16 a skiros:Connect,
+        owl:NamedIndividual ;
+    rdfs:label "connect" ;
+    skiros:hasParam skiros:Parameter-17 .
+
+skiros:Detect a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Detect-10 a skiros:Detect,
+        owl:NamedIndividual ;
+    rdfs:label "detect" ;
+    skiros:hasParam skiros:Parameter-11 .
+
+skiros:Kill a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Kill-6 a skiros:Kill,
+        owl:NamedIndividual ;
+    rdfs:label "kill" ;
+    skiros:hasParam skiros:Parameter-7 .
+
+skiros:Monitor a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Monitor-12 a skiros:Monitor,
+        owl:NamedIndividual ;
+    rdfs:label "monitor" ;
+    skiros:hasParam skiros:Parameter-13 .
+
+skiros:Parameter-11 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-13 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-15 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-17 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-19 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-3 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-5 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-7 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Parameter-9 a skiros:Parameter,
+        owl:NamedIndividual ;
+    rdfs:label "Robot" ;
+    skiros:DataType "sumo:Agent"^^xsd:string ;
+    skiros:ParameterType 2 ;
+    rdfs:comment ""^^xsd:string .
+
+skiros:Reset a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Reset-8 a skiros:Reset,
+        owl:NamedIndividual ;
+    rdfs:label "reset" ;
+    skiros:hasParam skiros:Parameter-9 .
+
+skiros:Skiros2Examples a owl:class ;
+    rdfs:subClassOf skiros:Skill .
+
+skiros:Spawn a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Spawn-2 a skiros:Spawn,
+        owl:NamedIndividual ;
+    rdfs:label "spawn" ;
+    skiros:hasParam skiros:Parameter-3 .
+
+skiros:Teleport a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimDrivers .
+
+skiros:Teleport-4 a skiros:Teleport,
+        owl:NamedIndividual ;
+    rdfs:label "teleport" ;
+    skiros:hasParam skiros:Parameter-5 .
+
+skiros:TurtlesimPrimitives a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimExample .
+
+skiros:TurtlesimSkills a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimExample .
+
+cora:Robot-1 a cora:Robot,
+        owl:NamedIndividual ;
+    rdfs:label "turtlebot:skill_mgr" ;
+    skiros:BaseFrameId ""^^xsd:string ;
+    skiros:DiscreteReasoner "AauSpatialReasoner"^^xsd:string ;
+    skiros:FrameId "cora:Robot-1"^^xsd:string ;
+    skiros:PublishTf true ;
+    skiros:SkillMgr "skill_mgr"^^xsd:string ;
+    skiros:Template "turtlebot:skill_mgr"^^xsd:string ;
+    skiros:hasSkill skiros:AutoConnect-18,
+        skiros:Command-14,
+        skiros:Connect-16,
+        skiros:Detect-10,
+        skiros:Kill-6,
+        skiros:Monitor-12,
+        skiros:Reset-8,
+        skiros:Spawn-2,
+        skiros:Teleport-4 ;
+    skiros:hasTemplate turtlebot:skill_mgr .
+
+skiros:TurtlesimExample a owl:class ;
+    rdfs:subClassOf skiros:Skiros2Examples .
+
+skiros:TurtlesimDrivers a owl:class ;
+    rdfs:subClassOf skiros:TurtlesimExample .
+

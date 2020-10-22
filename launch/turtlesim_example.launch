@@ -1,5 +1,6 @@
 <launch>
-  <arg name="skill_list" default="[spawn_random, move, patrol, follow, orbit]"/>
+  <!-- <arg name="skill_list" default="[synchronize, spawn, teleport, kill, reset, spawn_random, move, patrol, follow, orbit, monitor]"/> -->
+  <arg name="skill_list" default="[spawn, teleport, kill, reset, detect, monitor, command, connect, auto_connect, sync_all]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
 
@@ -21,7 +22,7 @@
       <arg name="libraries_list" value="[skiros2_examples, skiros2_std_skills]"/>
       <arg name="skill_list" value="$(arg skill_list)" />
       <arg name="robot_ontology_prefix" value="turtlebot"/>
-      <arg name="robot_name" value="turtle_robot"/>
+      <arg name="robot_name" value="skill_mgr"/>
       <arg name="deploy" value="$(arg deploy)"/>
   </include>
 </launch>
