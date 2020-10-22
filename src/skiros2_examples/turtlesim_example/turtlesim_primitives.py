@@ -67,17 +67,17 @@ class connect(PrimitiveBase):
 
 
 #################################################################################
-# Synchronize
+# Update
 #################################################################################
 
-class Synchronize(SkillDescription):
+class Update(SkillDescription):
     def createDescription(self):
         self.addParam("State", dict, ParamTypes.Optional)
         # self.addParam("Turtle", Element("turtlebot:Turtle"), ParamTypes.Optional)
 
-class synchronize(PrimitiveBase):
+class update(PrimitiveBase):
     def createDescription(self):
-        self.setDescription(Synchronize(), self.__class__.__name__)
+        self.setDescription(Update(), self.__class__.__name__)
 
     def execute(self):
         state = self.params["State"].value
@@ -106,63 +106,63 @@ class synchronize(PrimitiveBase):
 
 
 
-#################################################################################
-# SyncWM
-#################################################################################
+# #################################################################################
+# # SyncWM
+# #################################################################################
 
-class SyncWM(SkillDescription):
-    def createDescription(self):
-        self.addParam("Names", str, ParamTypes.Required)
-        self.addParam("Updated", bool, ParamTypes.Optional)
+# class SyncWM(SkillDescription):
+#     def createDescription(self):
+#         self.addParam("Names", str, ParamTypes.Required)
+#         self.addParam("Updated", bool, ParamTypes.Optional)
 
-class sync_wm(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(SyncWM(), self.__class__.__name__)
+# class sync_wm(PrimitiveBase):
+#     def createDescription(self):
+#         self.setDescription(SyncWM(), self.__class__.__name__)
 
-    def execute(self):
-        server_turtles = set(self.params["Names"].values)
+#     def execute(self):
+#         server_turtles = set(self.params["Names"].values)
 
-        wm_elements = self.wmi.resolve_elements(Element("turtlebot:Turtle"))
-        wm_turtles = set([t.getProperty("turtlebot:TurtleName").value for t in wm_elements])
+#         wm_elements = self.wmi.resolve_elements(Element("turtlebot:Turtle"))
+#         wm_turtles = set([t.getProperty("turtlebot:TurtleName").value for t in wm_elements])
 
-        add_turtles = server_turtles.difference(wm_turtles)
-        remove_turtles = wm_turtles.difference(server_turtles)
+#         add_turtles = server_turtles.difference(wm_turtles)
+#         remove_turtles = wm_turtles.difference(server_turtles)
 
-        if not add_turtles and not remove_turtles:
-            self.params["Updated"].value = False
-            return self.success("No updates")
+#         if not add_turtles and not remove_turtles:
+#             self.params["Updated"].value = False
+#             return self.success("No updates")
 
-        for name in add_turtles:
-            turtle = self.wmi.get_template_element("turtlebot:turtle")
-            turtle.label = "turtlebot:" + name
-            turtle.setProperty("turtlebot:TurtleName", "{}".format(name))
-            turtle = self.wmi.add_element(turtle)
+#         for name in add_turtles:
+#             turtle = self.wmi.get_template_element("turtlebot:turtle")
+#             turtle.label = "turtlebot:" + name
+#             turtle.setProperty("turtlebot:TurtleName", "{}".format(name))
+#             turtle = self.wmi.add_element(turtle)
 
-        for turtle in [e for e in wm_elements if e.getProperty("turtlebot:TurtleName").value in remove_turtles]:
-            self.wmi.remove_element(turtle)
+#         for turtle in [e for e in wm_elements if e.getProperty("turtlebot:TurtleName").value in remove_turtles]:
+#             self.wmi.remove_element(turtle)
 
-        self.params["Updated"].value = True
-        return self.success("Updated WM")
+#         self.params["Updated"].value = True
+#         return self.success("Updated WM")
 
 
-#################################################################################
-# UpdateDetector
-#################################################################################
+# #################################################################################
+# # UpdateDetector
+# #################################################################################
 
-class UpdateDetector(SkillDescription):
-    def createDescription(self):
-        #=======Params=========
-        self.addParam("Updated", bool, ParamTypes.Required)
+# class UpdateDetector(SkillDescription):
+#     def createDescription(self):
+#         #=======Params=========
+#         self.addParam("Updated", bool, ParamTypes.Required)
 
-class update_detector(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(UpdateDetector(), self.__class__.__name__)
+# class update_detector(PrimitiveBase):
+#     def createDescription(self):
+#         self.setDescription(UpdateDetector(), self.__class__.__name__)
 
-    def onPreempt(self):
-        return self.success("Done")
+#     def onPreempt(self):
+#         return self.success("Done")
 
-    def execute(self):
-        return self.step("") if not self.params["Updated"].value else self.success("Change detected")
+#     def execute(self):
+#         return self.step("") if not self.params["Updated"].value else self.success("Change detected")
 
 
 

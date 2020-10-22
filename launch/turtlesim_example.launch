@@ -1,6 +1,6 @@
 <launch>
   <!-- <arg name="skill_list" default="[synchronize, spawn, teleport, kill, reset, spawn_random, move, patrol, follow, orbit, monitor]"/> -->
-  <arg name="skill_list" default="[spawn, teleport, kill, reset, detect, monitor, command, connect, auto_connect, sync_all, synchronize, test]"/>
+  <arg name="skill_list" default="[spawn, teleport, kill, reset, detect, monitor, command, connect, auto_connect_all, synchronize, synchronize_all, auto_synchronize_all]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
 

@@ -47,30 +47,6 @@ class SkillFactory:
         )
 
 
-#################################################################################
-# Test
-#################################################################################
-
-class Test(SkillDescription):
-    def createDescription(self):
-        self.addParam("Name", str, ParamTypes.Required)
-
-class test(SkillBase):
-    def createDescription(self):
-        self.setDescription(Test(), self.__class__.__name__)
-
-    def expand(self, skill):
-        skill.setProcessor(Serial())
-        skill(
-            self.skill("Connect", "connect"),
-            self.skill(ParallelFf())(
-                self.skill("Monitor", "monitor"),
-                self.skill("Synchronize", "synchronize"),
-            ),
-        )
-
-
-
 
 
 #################################################################################
@@ -96,16 +72,16 @@ class connect_all(SkillBase):
 
 
 #################################################################################
-# AutoConnect
+# AutoConnectAll
 #################################################################################
 
-class AutoConnect(SkillDescription):
+class AutoConnectAll(SkillDescription):
     def createDescription(self):
         pass
 
-class auto_connect(SkillBase):
+class auto_connect_all(SkillBase):
     def createDescription(self):
-        self.setDescription(AutoConnect(), self.__class__.__name__)
+        self.setDescription(AutoConnectAll(), self.__class__.__name__)
 
     def expand(self, skill):
         S = SkillFactory(self)
@@ -117,38 +93,6 @@ class auto_connect(SkillBase):
         )
 
 
-#################################################################################
-# SyncAll
-#################################################################################
-
-class SyncAll(SkillDescription):
-    def createDescription(self):
-        pass
-
-class sync_all(SkillBase):
-    def createDescription(self):
-        self.setDescription(SyncAll(), self.__class__.__name__)
-
-    def expand(self, skill):
-        S = SkillFactory(self)
-
-        skill(S.RepeatForever(self.skill("AutoConnect", "auto_connect")))
-
-        # skill.setProcessor(Serial())
-        # skill(
-        #     self.skill("Auto", "detect_turtles"),
-        #     self.skill("SyncWM", "sync_wm"),
-        #     # S.RepeatUntilTimeout(1.0,
-        #     self.skill("MonitorTurtles", "monitor_turtles")
-        #     # )
-        # )
-
-
-
-
-
-
-
 
 #################################################################################
 # Synchronize
@@ -156,23 +100,93 @@ class sync_all(SkillBase):
 
 class Synchronize(SkillDescription):
     def createDescription(self):
-        pass
+        self.addParam("Name", str, ParamTypes.Required)
 
 class synchronize(SkillBase):
     def createDescription(self):
         self.setDescription(Synchronize(), self.__class__.__name__)
 
     def expand(self, skill):
+        turtle = self.params["Name"].value
+        skill.setProcessor(ParallelFf())
+        skill(
+            self.skill(Serial())(
+                self.skill("Connect", "connect", specify={"Name": turtle}),
+                self.skill("Monitor", "monitor", specify={"Name": turtle}),
+            ),
+            self.skill("Update", "update"),
+        )
+
+
+#################################################################################
+# SynchronizeAll
+#################################################################################
+
+class SynchronizeAll(SkillDescription):
+    def createDescription(self):
+        self.addParam("Names", str, ParamTypes.Required)
+
+class synchronize_all(SkillBase):
+    def createDescription(self):
+        self.setDescription(SynchronizeAll(), self.__class__.__name__)
+        self._expand_on_start = True
+
+    def expand(self, skill):
+        sync = []
+        # for turtle in self.params["Names"].values:
+        for turtle in ["turtle1", "turtle2"]:
+            sync.append(self.skill("Synchronize", "synchronize", specify={"Name": turtle}))
+
+        skill.setProcessor(ParallelFf())
+        skill(*sync)
+
+
+#################################################################################
+# AutoSynchronizeAll
+#################################################################################
+
+class AutoSynchronizeAll(SkillDescription):
+    def createDescription(self):
+        pass
+
+class auto_synchronize_all(SkillBase):
+    def createDescription(self):
+        self.setDescription(AutoSynchronizeAll(), self.__class__.__name__)
+
+    def expand(self, skill):
         S = SkillFactory(self)
 
         skill.setProcessor(Serial())
-        skill(
-            self.skill("DetectTurtles", "detect_turtles"),
-            self.skill("SyncWM", "sync_wm"),
-            # S.RepeatUntilTimeout(1.0,
-            self.skill("MonitorTurtles", "monitor_turtles")
-            # )
-        )
+        skill(S.Repeat(
+            self.skill("Detect", "detect"),
+            self.skill("SynchronizeAll", "synchronize_all")
+        ))
+
+
+
+# #################################################################################
+# # Synchronize
+# #################################################################################
+
+# class Synchronize(SkillDescription):
+#     def createDescription(self):
+#         pass
+
+# class synchronize(SkillBase):
+#     def createDescription(self):
+#         self.setDescription(Synchronize(), self.__class__.__name__)
+
+#     def expand(self, skill):
+#         S = SkillFactory(self)
+
+#         skill.setProcessor(Serial())
+#         skill(
+#             self.skill("DetectTurtles", "detect_turtles"),
+#             self.skill("SyncWM", "sync_wm"),
+#             # S.RepeatUntilTimeout(1.0,
+#             self.skill("MonitorTurtles", "monitor_turtles")
+#             # )
+#         )
 
 #################################################################################
 # MonitorAll
