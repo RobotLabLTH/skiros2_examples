@@ -47,6 +47,31 @@ class SkillFactory:
         )
 
 
+#################################################################################
+# Test
+#################################################################################
+
+class Test(SkillDescription):
+    def createDescription(self):
+        self.addParam("Name", str, ParamTypes.Required)
+
+class test(SkillBase):
+    def createDescription(self):
+        self.setDescription(Test(), self.__class__.__name__)
+
+    def expand(self, skill):
+        skill.setProcessor(Serial())
+        skill(
+            self.skill("Connect", "connect"),
+            self.skill(ParallelFf())(
+                self.skill("Monitor", "monitor"),
+                self.skill("Synchronize", "synchronize"),
+            ),
+        )
+
+
+
+
 
 #################################################################################
 # ConnectAll
@@ -117,7 +142,7 @@ class sync_all(SkillBase):
         #     self.skill("MonitorTurtles", "monitor_turtles")
         #     # )
         # )
-    
+
 
 
 
@@ -148,7 +173,7 @@ class synchronize(SkillBase):
             self.skill("MonitorTurtles", "monitor_turtles")
             # )
         )
-    
+
 #################################################################################
 # MonitorAll
 #################################################################################

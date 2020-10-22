@@ -1,10 +1,10 @@
 <launch>
   <!-- <arg name="skill_list" default="[synchronize, spawn, teleport, kill, reset, spawn_random, move, patrol, follow, orbit, monitor]"/> -->
-  <arg name="skill_list" default="[spawn, teleport, kill, reset, detect, monitor, command, connect, auto_connect, sync_all]"/>
+  <arg name="skill_list" default="[spawn, teleport, kill, reset, detect, monitor, command, connect, auto_connect, sync_all, synchronize, test]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
 
-  <node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
+  <node ns="turtles" name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
 
   <include file="$(find skiros2)/launch/world_model_server.launch">
       <arg name="init_scene" value=""/>

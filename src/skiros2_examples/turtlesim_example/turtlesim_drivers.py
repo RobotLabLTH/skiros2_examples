@@ -32,7 +32,7 @@ class spawn(PrimitiveBase):
     def execute(self):
         name = self.params["Name"].value
         try:
-            spawner = rospy.ServiceProxy('spawn', SpawnSrv)
+            spawner = rospy.ServiceProxy('/turtles/spawn', SpawnSrv)
             resp = spawner(self.params["X"].value , self.params["Y"].value, math.radians(self.params["Rotation"].value), name)
         except rospy.ServiceException as e:
             return self.fail("Spawning turtle failed.", -1)
@@ -83,7 +83,7 @@ class kill(PrimitiveBase):
     def execute(self):
         name = self.params["Name"].value
         try:
-            killer = rospy.ServiceProxy('kill', KillSrv)
+            killer = rospy.ServiceProxy('/turtles/kill', KillSrv)
             resp = killer(name)
         except rospy.ServiceException as e:
             return self.fail("Killing turtle failed.", -1)
@@ -105,7 +105,7 @@ class reset(PrimitiveBase):
 
     def execute(self):
         try:
-            resetter = rospy.ServiceProxy('reset', EmptySrv)
+            resetter = rospy.ServiceProxy('/turtles/reset', EmptySrv)
             resp = resetter()
         except rospy.ServiceException as e:
             return self.fail("Reset simulation failed.", -1)

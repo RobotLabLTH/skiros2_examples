@@ -32,9 +32,6 @@ class keep_alive(PrimitiveBase):
 
 
 
-
-
-
 #################################################################################
 # Connect
 #################################################################################
@@ -67,6 +64,42 @@ class connect(PrimitiveBase):
             return self.success("{}: Connected".format(name))
 
         return self.success("{}: Already connected".format(name))
+
+
+#################################################################################
+# Synchronize
+#################################################################################
+
+class Synchronize(SkillDescription):
+    def createDescription(self):
+        self.addParam("State", dict, ParamTypes.Optional)
+        # self.addParam("Turtle", Element("turtlebot:Turtle"), ParamTypes.Optional)
+
+class synchronize(PrimitiveBase):
+    def createDescription(self):
+        self.setDescription(Synchronize(), self.__class__.__name__)
+
+    def execute(self):
+        state = self.params["State"].value
+        if not state:
+            return self.success("No valid state to synchronize")
+
+        name = state['Name']
+
+        wm_elements = self.wmi.resolve_elements(Element("turtlebot:Turtle"))
+        wm_turtle = [t for t in wm_elements if t.getProperty("turtlebot:TurtleName").value == name]
+
+        if not wm_turtle:
+            return self.fail("{}: Turtle does not exist!".format(name), -1)
+
+        turtle = wm_turtle[0]
+        turtle.setData(":Position", [state['X'], state['Y'], 0.0])
+        turtle.setData(":OrientationEuler", [0.0, 0.0, math.radians(state['R'])])
+        self.wmi.update_element(turtle)
+
+        return self.success("{}: Updated".format(name))
+
+
 
 
 
