@@ -118,7 +118,7 @@ class follow(SkillBase):
         skill.setProcessor(ParallelFs())
         skill(
             self.skill("Monitor", "monitor"),
-            self.skill("PoseController", "pose_controller", specify={"MinVel": 2.0},
+            self.skill("PoseController", "pose_controller", specify={"MinVel": 0.0},
                        remap={"Linear": "Linear{}".format(uid), "Angular": "Angular{}".format(uid)}),
             self.skill("Command", "command",
                        remap={"Linear": "Linear{}".format(uid), "Angular": "Angular{}".format(uid)}),

@@ -1,5 +1,5 @@
 <launch>
-  <arg name="skill_list" default="[spawn, move, patrol, follow, orbit, avoid_the_turtles_run, avoid_the_turtles_setup]"/>
+  <arg name="skill_list" default="[spawn, move, patrol, follow, orbit, turtles_setup, super_t_coordinator]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
 
