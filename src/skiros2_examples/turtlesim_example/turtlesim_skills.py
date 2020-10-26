@@ -50,6 +50,33 @@ class SkillFactory:
 
 
 #################################################################################
+# ConnectTurtle
+#################################################################################
+
+class ConnectTurtle(SkillDescription):
+    def createDescription(self):
+        self.addParam("Name", str, ParamTypes.Required)
+
+class connect(SkillBase):
+    def createDescription(self):
+        self.setDescription(Connect(), self.__class__.__name__)
+
+    def expand(self, skill):
+        turtle = self.params["Name"].value
+        skill.setProcessor(ParallelFf())
+        skill(
+            self.skill(Serial())(
+                self.skill("Connect", "connect"),
+                self.skill("Monitor", "monitor"),
+            ),
+            self.skill("Update", "update"),
+        )
+
+
+
+
+
+#################################################################################
 # ConnectAll
 #################################################################################
 
@@ -84,8 +111,6 @@ class auto_connect_all(SkillBase):
         self.setDescription(AutoConnectAll(), self.__class__.__name__)
 
     def expand(self, skill):
-        S = SkillFactory(self)
-
         skill.setProcessor(Serial())
         skill(
             self.skill("Detect", "detect"),
@@ -111,8 +136,8 @@ class synchronize(SkillBase):
         skill.setProcessor(ParallelFf())
         skill(
             self.skill(Serial())(
-                self.skill("Connect", "connect", specify={"Name": turtle}),
-                self.skill("Monitor", "monitor", specify={"Name": turtle}),
+                self.skill("Connect", "connect"),
+                self.skill("Monitor", "monitor"),
             ),
             self.skill("Update", "update"),
         )
@@ -133,9 +158,8 @@ class synchronize_all(SkillBase):
 
     def expand(self, skill):
         sync = []
-        # for turtle in self.params["Names"].values:
-        for turtle in ["turtle1", "turtle2"]:
-            sync.append(self.skill("Synchronize", "synchronize", specify={"Name": turtle}))
+        for turtle in self.params["Names"].values:
+            sync.append(self.skill("Synchronize", "synchronize", remap={"Name": turtle}, specify={turtle: turtle}))
 
         skill.setProcessor(ParallelFf())
         skill(*sync)
@@ -157,10 +181,13 @@ class auto_synchronize_all(SkillBase):
         S = SkillFactory(self)
 
         skill.setProcessor(Serial())
-        skill(S.Repeat(
+        skill(
             self.skill("Detect", "detect"),
-            self.skill("SynchronizeAll", "synchronize_all")
-        ))
+            S.RepeatForever(
+                self.skill("SynchronizeAll", "synchronize_all"),
+                self.skill("DetectChange", "detect_change"),
+            )
+        )
 
 
 

@@ -1,131 +1,26 @@
-from skiros2_skill.core.skill import SkillDescription, ParamOptions
-from skiros2_common.core.params import ParamTypes
-from skiros2_common.core.world_element import Element
-from skiros2_common.core.primitive import PrimitiveBase
 import rospy
-import turtlesim.msg as ts
-from std_srvs.srv import Empty as EmptySrv
-from geometry_msgs.msg import Twist
-from turtlesim.srv import Spawn as SpawnSrv, Kill as KillSrv, TeleportAbsolute as TeleportSrv
-import threading, numpy
-
 import numpy as np
-import math
+
+from skiros2_skill.core.skill import SkillDescription
+from skiros2_common.core.params import ParamTypes
+from skiros2_common.core.primitive import PrimitiveBase
+
+from turtlesim.msg import Pose as PoseMsg
+from geometry_msgs.msg import Twist as TwistMsg
 
 
 #################################################################################
-# Spawn
+# DriverDetect
 #################################################################################
 
-class Spawn(SkillDescription):
-    def createDescription(self):
-        #=======Params=========
-        self.addParam("Name", str, ParamTypes.Required)
-        self.addParam("X", 0.0, ParamTypes.Required)
-        self.addParam("Y", 0.0, ParamTypes.Required)
-        self.addParam("Rotation", 0.0, ParamTypes.Required)
-
-class spawn(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(Spawn(), self.__class__.__name__)
-
-    def execute(self):
-        name = self.params["Name"].value
-        try:
-            spawner = rospy.ServiceProxy('/turtles/spawn', SpawnSrv)
-            resp = spawner(self.params["X"].value , self.params["Y"].value, math.radians(self.params["Rotation"].value), name)
-        except rospy.ServiceException as e:
-            return self.fail("Spawning turtle failed.", -1)
-
-        return self.success("Spawned turtle {}".format(name))
-
-
-#################################################################################
-# Teleport
-#################################################################################
-
-class Teleport(SkillDescription):
-    def createDescription(self):
-        #=======Params=========
-        self.addParam("Name", str, ParamTypes.Required)
-        self.addParam("X", 0.0, ParamTypes.Required)
-        self.addParam("Y", 0.0, ParamTypes.Required)
-        self.addParam("Rotation", 0.0, ParamTypes.Required)
-
-class teleport(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(Teleport(), self.__class__.__name__)
-
-    def execute(self):
-        name = self.params["Name"].value
-        try:
-            tele = rospy.ServiceProxy("/turtles/{}/teleport_absolute".format(name), TeleportSrv)
-            resp = tele(self.params["X"].value, self.params["Y"].value, self.params["Rotation"].value)
-        except rospy.ServiceException as e:
-            return self.fail("Teleporting turtle failed.", -1)
-
-        return self.success("Teleporting turtle {}".format(name))
-
-
-#################################################################################
-# Kill
-#################################################################################
-
-class Kill(SkillDescription):
-    def createDescription(self):
-        #=======Params=========
-        self.addParam("Name", str, ParamTypes.Required)
-
-class kill(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(Kill(), self.__class__.__name__)
-
-    def execute(self):
-        name = self.params["Name"].value
-        try:
-            killer = rospy.ServiceProxy('/turtles/kill', KillSrv)
-            resp = killer(name)
-        except rospy.ServiceException as e:
-            return self.fail("Killing turtle failed.", -1)
-
-        return self.success("Killed turtle {}".format(name))
-
-
-#################################################################################
-# Reset
-#################################################################################
-
-class Reset(SkillDescription):
-    def createDescription(self):
-        pass
-
-class reset(PrimitiveBase):
-    def createDescription(self):
-        self.setDescription(Reset(), self.__class__.__name__)
-
-    def execute(self):
-        try:
-            resetter = rospy.ServiceProxy('/turtles/reset', EmptySrv)
-            resp = resetter()
-        except rospy.ServiceException as e:
-            return self.fail("Reset simulation failed.", -1)
-
-        return self.success("Reset simulation")
-
-
-
-#################################################################################
-# Detect
-#################################################################################
-
-class Detect(SkillDescription):
+class DriverDetect(SkillDescription):
     def createDescription(self):
         #=======Params=========
         self.addParam("Names", str, ParamTypes.Optional)
 
-class detect(PrimitiveBase):
+class driver_detect(PrimitiveBase):
     def createDescription(self):
-        self.setDescription(Detect(), self.__class__.__name__)
+        self.setDescription(DriverDetect(), self.__class__.__name__)
 
     def execute(self):
         turtles = list(set([t[0].split('/')[2] for t in rospy.get_published_topics("/turtles")]))
@@ -134,19 +29,18 @@ class detect(PrimitiveBase):
 
 
 #################################################################################
-# Monitor
+# DriverRead
 #################################################################################
 
-class Monitor(SkillDescription):
+class DriverRead(SkillDescription):
     def createDescription(self):
         #=======Params=========
         self.addParam("Name", str, ParamTypes.Required)
-        self.addParam("State", dict, ParamTypes.Optional)
+        self.addParam("Output", dict, ParamTypes.Optional)
 
-class monitor(PrimitiveBase):
+class driver_read(PrimitiveBase):
     def createDescription(self):
-        self.setDescription(Monitor(), self.__class__.__name__)
-
+        self.setDescription(DriverRead(), self.__class__.__name__)
 
     def onStart(self):
         turtle = self.params["Name"].value
@@ -157,7 +51,7 @@ class monitor(PrimitiveBase):
             self.startError("Could not establish connection to turtle '{}'".format(turtle), -2)
             return False
 
-        self._sub = rospy.Subscriber(topic, ts.Pose, self._receive)
+        self._sub = rospy.Subscriber(topic, PoseMsg, self._receive)
         self._pose = None
         return True
 
@@ -189,20 +83,21 @@ class monitor(PrimitiveBase):
         return self.step("{}: Connected".format(turtle))
 
 
-
 #################################################################################
-# Command
+# DriverWrite
 #################################################################################
 
-class Command(SkillDescription):
+class DriverWrite(SkillDescription):
     def createDescription(self):
         self.addParam("Name", str, ParamTypes.Required)
+        self.addParam("Input", dict, ParamTypes.Optional)
+
         self.addParam("Linear", float, ParamTypes.Required, "Linear velocity")
         self.addParam("Angular", float, ParamTypes.Required, "Angular velocity in degrees")
 
-class command(PrimitiveBase):
+class driver_write(PrimitiveBase):
     def createDescription(self):
-        self.setDescription(Command(), self.__class__.__name__)
+        self.setDescription(DriverWrite(), self.__class__.__name__)
 
     def _wait_for_connection(self, timeout=0.5):
         d = rospy.Duration(0.05)
@@ -214,9 +109,9 @@ class command(PrimitiveBase):
         return True
 
     def _send(self, linear, angular):
-        msg = Twist()
+        msg = TwistMsg()
         msg.linear.x = linear
-        msg.angular.z = math.radians(angular)
+        msg.angular.z = np.math.radians(angular)
         self._pub.publish(msg)
 
     def onPreempt(self):
@@ -225,7 +120,7 @@ class command(PrimitiveBase):
 
     def onStart(self):
         turtle = self.params["Name"].value
-        self._pub = rospy.Publisher("/turtles/{}/cmd_vel".format(turtle), Twist, queue_size=20)
+        self._pub = rospy.Publisher("/turtles/{}/cmd_vel".format(turtle), TwistMsg, queue_size=20)
 
         if not self._wait_for_connection():
             self.startError("Could not establish connection to turtle '{}'".format(turtle), -2)
@@ -244,8 +139,7 @@ class command(PrimitiveBase):
         if not self._wait_for_connection():
             return self.fail("{}: Connection lost".format(turtle), -1)
 
+        state = self.params["Input"].value
         self._send(self.params["Linear"].value, self.params["Angular"].value)
 
         return self.step("{}: moving [{} {}]".format(turtle, self.params["Linear"].value, self.params["Angular"].value))
-
-

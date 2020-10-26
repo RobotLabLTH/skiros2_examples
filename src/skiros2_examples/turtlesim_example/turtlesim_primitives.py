@@ -1,16 +1,11 @@
-from skiros2_skill.core.skill import SkillDescription, ParamOptions
-from skiros2_common.core.params import ParamTypes
-from skiros2_common.core.world_element import Element
-from skiros2_common.core.primitive import PrimitiveBase
 import rospy
-import turtlesim.msg as ts
-from std_srvs.srv import Empty as EmptySrv
-from geometry_msgs.msg import Twist
-from turtlesim.srv import Spawn as SpawnSrv, Kill as KillSrv, TeleportAbsolute as TeleportSrv
-import threading, numpy
-
 import numpy as np
-import math
+
+from skiros2_skill.core.skill import SkillDescription
+from skiros2_common.core.params import ParamTypes
+from skiros2_common.core.primitive import PrimitiveBase
+
+from skiros2_common.core.world_element import Element
 
 
 #################################################################################
@@ -31,7 +26,6 @@ class keep_alive(PrimitiveBase):
         return self.step("")
 
 
-
 #################################################################################
 # Connect
 #################################################################################
@@ -40,7 +34,6 @@ class Connect(SkillDescription):
     def createDescription(self):
         #=======Params=========
         self.addParam("Name", str, ParamTypes.Optional)
-        # self.addParam("Turtle", Element("turtlebot:Turtle"), ParamTypes.Required)
 
 class connect(PrimitiveBase):
     def createDescription(self):
@@ -61,9 +54,41 @@ class connect(PrimitiveBase):
             turtle.setProperty("turtlebot:TurtleName", "{}".format(name))
             turtle.label = "turtlebot:" + name
             turtle = self.wmi.add_element(turtle)
-            return self.success("{}: Connected".format(name))
+            return self.success("{}: Established connection".format(name))
 
-        return self.success("{}: Already connected".format(name))
+        return self.success("{}: Connected".format(name))
+
+
+
+#################################################################################
+# DetectChange
+#################################################################################
+
+class DetectChange(SkillDescription):
+    def createDescription(self):
+        #=======Params=========
+        self.addParam("Names", str, ParamTypes.Optional)
+
+class detect_change(PrimitiveBase):
+    def createDescription(self):
+        self.setDescription(DetectChange(), self.__class__.__name__)
+
+    def execute(self):
+        server_turtles = set(self.params["Names"].values)
+
+        wm_elements = self.wmi.resolve_elements(Element("turtlebot:Turtle"))
+        wm_turtles = set([t.getProperty("turtlebot:TurtleName").value for t in wm_elements])
+
+        add_turtles = server_turtles.difference(wm_turtles)
+        remove_turtles = wm_turtles.difference(server_turtles)
+
+        if not add_turtles and not remove_turtles:
+            return self.success("No change")
+        else:
+            return self.fail("Change detected", -1)
+
+
+
 
 
 #################################################################################
@@ -94,7 +119,7 @@ class update(PrimitiveBase):
 
         turtle = wm_turtle[0]
         turtle.setData(":Position", [state['X'], state['Y'], 0.0])
-        turtle.setData(":OrientationEuler", [0.0, 0.0, math.radians(state['R'])])
+        turtle.setData(":OrientationEuler", [0.0, 0.0, np.math.radians(state['R'])])
         self.wmi.update_element(turtle)
 
         return self.success("{}: Updated".format(name))
@@ -104,65 +129,6 @@ class update(PrimitiveBase):
 
 
 
-
-
-# #################################################################################
-# # SyncWM
-# #################################################################################
-
-# class SyncWM(SkillDescription):
-#     def createDescription(self):
-#         self.addParam("Names", str, ParamTypes.Required)
-#         self.addParam("Updated", bool, ParamTypes.Optional)
-
-# class sync_wm(PrimitiveBase):
-#     def createDescription(self):
-#         self.setDescription(SyncWM(), self.__class__.__name__)
-
-#     def execute(self):
-#         server_turtles = set(self.params["Names"].values)
-
-#         wm_elements = self.wmi.resolve_elements(Element("turtlebot:Turtle"))
-#         wm_turtles = set([t.getProperty("turtlebot:TurtleName").value for t in wm_elements])
-
-#         add_turtles = server_turtles.difference(wm_turtles)
-#         remove_turtles = wm_turtles.difference(server_turtles)
-
-#         if not add_turtles and not remove_turtles:
-#             self.params["Updated"].value = False
-#             return self.success("No updates")
-
-#         for name in add_turtles:
-#             turtle = self.wmi.get_template_element("turtlebot:turtle")
-#             turtle.label = "turtlebot:" + name
-#             turtle.setProperty("turtlebot:TurtleName", "{}".format(name))
-#             turtle = self.wmi.add_element(turtle)
-
-#         for turtle in [e for e in wm_elements if e.getProperty("turtlebot:TurtleName").value in remove_turtles]:
-#             self.wmi.remove_element(turtle)
-
-#         self.params["Updated"].value = True
-#         return self.success("Updated WM")
-
-
-# #################################################################################
-# # UpdateDetector
-# #################################################################################
-
-# class UpdateDetector(SkillDescription):
-#     def createDescription(self):
-#         #=======Params=========
-#         self.addParam("Updated", bool, ParamTypes.Required)
-
-# class update_detector(PrimitiveBase):
-#     def createDescription(self):
-#         self.setDescription(UpdateDetector(), self.__class__.__name__)
-
-#     def onPreempt(self):
-#         return self.success("Done")
-
-#     def execute(self):
-#         return self.step("") if not self.params["Updated"].value else self.success("Change detected")
 
 
 
@@ -233,12 +199,12 @@ class angular_controller(PrimitiveBase):
         turtle_rot = turtle.getData(":OrientationEuler")[2]
 
         a = turtle_dir / np.linalg.norm(turtle_dir)
-        b = np.array([math.cos(turtle_rot), math.sin(turtle_rot)])
+        b = np.array([np.math.cos(turtle_rot), np.math.sin(turtle_rot)])
 
         angle = np.arctan2(np.cross(b, a), np.dot(b,a))
         if np.isnan(angle): angle = 0.0
 
-        self.params["Angular"].value = math.degrees(angle) * self.params["Gain"].value
+        self.params["Angular"].value = np.math.degrees(angle) * self.params["Gain"].value
 
         return self.success("")
 
@@ -282,13 +248,13 @@ class pose_controller(PrimitiveBase):
         turtle_rot = turtle.getData(":OrientationEuler")[2]
 
         a = turtle_dir / distance
-        b = np.array([math.cos(turtle_rot), math.sin(turtle_rot)])
+        b = np.array([np.math.cos(turtle_rot), np.math.sin(turtle_rot)])
 
         angle = np.arctan2(np.cross(b, a), np.dot(b,a))
         if np.isnan(angle): angle = 0.0
 
         self.params["Linear"].value = distance
-        self.params["Angular"].value = math.degrees(angle) * 2
+        self.params["Angular"].value = np.math.degrees(angle) * 2
 
         return self.success("")
 
