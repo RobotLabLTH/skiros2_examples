@@ -1,6 +1,6 @@
 <launch>
   <!-- <arg name="skill_list" default="[synchronize, spawn, teleport, kill, reset, spawn_random, move, patrol, follow, orbit, monitor]"/> -->
-  <arg name="skill_list" default="[simulation_spawn, simulation_teleport, simulation_kill, simulation_reset, driver_detect, driver_monitor, driver_command, connect, auto_connect_all, synchronize, synchronize_all, auto_synchronize_all]"/>
+  <arg name="skill_list" default="[simulation_spawn, simulation_teleport, simulation_kill, simulation_reset, driver_detect, driver_read, driver_write, auto_connect]"/>
   <arg name="debug" default="false"/>
   <arg name="deploy" default="true"/>
 

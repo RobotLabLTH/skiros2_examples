@@ -26,10 +26,49 @@ class keep_alive(PrimitiveBase):
         return self.step("")
 
 
+
+
+#################################################################################
+# AutoConnect
+#################################################################################
+class AutoConnect(SkillDescription):
+    def createDescription(self):
+        pass
+
+class auto_connect(SkillBase):
+    def createDescription(self):
+        self.setDescription(AutoConnect(), self.__class__.__name__)
+
+    def expand(self, skill):
+        skill.setProcessor(Serial())
+        skill(
+            self.skill("DriverDetect", "driver_detect"),
+            self.skill("ConnectAll", "connect_all")
+        )
+
+#################################################################################
+# ConnectAll
+#################################################################################
+class ConnectAll(SkillDescription):
+    def createDescription(self):
+        self.addParam("Names", str, ParamTypes.Required)
+
+class connect_all(SkillBase):
+    def createDescription(self):
+        self.setDescription(ConnectAll(), self.__class__.__name__)
+        self._expand_on_start = True
+
+    def expand(self, skill):
+        foreach = []
+        for turtle in self.params["Names"].values:
+            foreach.append(self.skill("Connect", "connect", specify={"Name": turtle}))
+
+        skill.setProcessor(ParallelFf())
+        skill(*foreach)
+
 #################################################################################
 # Connect
 #################################################################################
-
 class Connect(SkillDescription):
     def createDescription(self):
         #=======Params=========

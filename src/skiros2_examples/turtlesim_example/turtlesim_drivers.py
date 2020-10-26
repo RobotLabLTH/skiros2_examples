@@ -51,8 +51,8 @@ class driver_read(PrimitiveBase):
             self.startError("Could not establish connection to turtle '{}'".format(turtle), -2)
             return False
 
-        self._sub = rospy.Subscriber(topic, PoseMsg, self._receive)
         self._pose = None
+        self._sub = rospy.Subscriber(topic, PoseMsg, self._read)
         return True
 
     def onEnd(self):
@@ -60,7 +60,7 @@ class driver_read(PrimitiveBase):
         self._sub = None
         return True
 
-    def _receive(self, msg):
+    def _read(self, msg):
         self._pose = {
             "Name": self.params["Name"].value,
             "X": msg.x,
@@ -92,9 +92,6 @@ class DriverWrite(SkillDescription):
         self.addParam("Name", str, ParamTypes.Required)
         self.addParam("Input", dict, ParamTypes.Optional)
 
-        self.addParam("Linear", float, ParamTypes.Required, "Linear velocity")
-        self.addParam("Angular", float, ParamTypes.Required, "Angular velocity in degrees")
-
 class driver_write(PrimitiveBase):
     def createDescription(self):
         self.setDescription(DriverWrite(), self.__class__.__name__)
@@ -108,14 +105,8 @@ class driver_write(PrimitiveBase):
                 return False
         return True
 
-    def _send(self, linear, angular):
-        msg = TwistMsg()
-        msg.linear.x = linear
-        msg.angular.z = np.math.radians(angular)
-        self._pub.publish(msg)
-
     def onPreempt(self):
-        self._send(0,0)
+        self._write(0,0)
         return self.fail("Preempted", -1)
 
     def onStart(self):
@@ -125,7 +116,6 @@ class driver_write(PrimitiveBase):
         if not self._wait_for_connection():
             self.startError("Could not establish connection to turtle '{}'".format(turtle), -2)
             return False
-
         return True
 
     def onEnd(self):
@@ -133,13 +123,19 @@ class driver_write(PrimitiveBase):
         self._pub = None
         return True
 
+    def _write(self, state):
+        msg = TwistMsg()
+        msg.linear.x = state["X"]
+        msg.linear.y = state["Y"]
+        msg.angular.z = np.math.radians(state["R"])
+        self._pub.publish(msg)
+
     def execute(self):
         turtle = self.params["Name"].value
 
         if not self._wait_for_connection():
             return self.fail("{}: Connection lost".format(turtle), -1)
 
-        state = self.params["Input"].value
-        self._send(self.params["Linear"].value, self.params["Angular"].value)
+        self._write(self.params["Input"].value)
 
-        return self.step("{}: moving [{} {}]".format(turtle, self.params["Linear"].value, self.params["Angular"].value))
+        return self.step("{}: moving [{} {}]".format(turtle, self.params["Input"].value))

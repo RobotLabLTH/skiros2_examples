@@ -13,7 +13,7 @@ from turtlesim.srv import Spawn as SpawnSrv, Kill as KillSrv, TeleportAbsolute a
 # SimulationSpawn
 #################################################################################
 
-class Spawn(SkillDescription):
+class SimulationSpawn(SkillDescription):
     def createDescription(self):
         #=======Params=========
         self.addParam("Name", str, ParamTypes.Required)

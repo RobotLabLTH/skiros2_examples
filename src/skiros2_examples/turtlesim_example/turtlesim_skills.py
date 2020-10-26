@@ -49,6 +49,8 @@ class SkillFactory:
 
 
 
+
+
 #################################################################################
 # ConnectTurtle
 #################################################################################
@@ -75,47 +77,6 @@ class connect(SkillBase):
 
 
 
-
-#################################################################################
-# ConnectAll
-#################################################################################
-
-class ConnectAll(SkillDescription):
-    def createDescription(self):
-        self.addParam("Names", str, ParamTypes.Required)
-
-class connect_all(SkillBase):
-    def createDescription(self):
-        self.setDescription(ConnectAll(), self.__class__.__name__)
-        self._expand_on_start = True
-
-    def expand(self, skill):
-        monitor = []
-        for turtle in self.params["Names"].values:
-            monitor.append(self.skill("Connect", "connect", specify={"Name": turtle}))
-
-        skill.setProcessor(ParallelFf())
-        skill(*monitor)
-
-
-#################################################################################
-# AutoConnectAll
-#################################################################################
-
-class AutoConnectAll(SkillDescription):
-    def createDescription(self):
-        pass
-
-class auto_connect_all(SkillBase):
-    def createDescription(self):
-        self.setDescription(AutoConnectAll(), self.__class__.__name__)
-
-    def expand(self, skill):
-        skill.setProcessor(Serial())
-        skill(
-            self.skill("Detect", "detect"),
-            self.skill("ConnectAll", "connect_all")
-        )
 
 
 
