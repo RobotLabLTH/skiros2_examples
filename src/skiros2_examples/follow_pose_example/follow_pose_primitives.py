@@ -48,6 +48,7 @@ class PoseFollowerThreeAxis(SkillDescription):
         # =======Params=========
         self.addParam("Pose", Element("skiros:TransformationPose"), ParamTypes.Required)
         self.addParam("Pose2", Element("skiros:TransformationPose"), ParamTypes.Required)
+
 #################################################################################
 # Implementations
 #################################################################################
