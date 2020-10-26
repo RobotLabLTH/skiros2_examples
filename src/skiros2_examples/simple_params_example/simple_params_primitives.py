@@ -3,6 +3,7 @@ import time
 from skiros2_skill.core.skill import SkillDescription
 from skiros2_common.core.params import ParamTypes
 from skiros2_common.core.primitive import PrimitiveBase
+from skiros2_common.core.conditions import ConditionFunction
 import threading
 try:
     import Queue as queue
@@ -18,12 +19,16 @@ class TrajectoryGenerator(SkillDescription):
     def createDescription(self):
         # =======Params=========
         self.addParam("Trajectory", dict, ParamTypes.Optional)
+        self.addParam("Index", 0, ParamTypes.Required)
+        self.addParam("Iterations", 5, ParamTypes.Required)
+        # =======Postcondition=========
+        self.addPostCondition(ConditionFunction("Iterations", ["Index"], lambda x: x - 5))
 
 
 class TrajectoryConsumer(SkillDescription):
     def createDescription(self):
         # =======Params=========
-        self.addParam("Trajectory", dict, ParamTypes.Required)
+        self.addParam("Trajectory", dict, ParamTypes.Optional)
 
 #################################################################################
 # Implementations
@@ -35,7 +40,6 @@ class sync_trajectory_generator(PrimitiveBase):
     This primitive generates several fake trajectories, under form of a dictionary
     """
     q = queue.Queue(1)
-    iterations = 5
 
     def onStart(self):
         self.i = 0
@@ -48,11 +52,8 @@ class sync_trajectory_generator(PrimitiveBase):
         traj = {}
         traj["Trajectory"] = [random.random() for _ in xrange(5)]
         self.params["Trajectory"].values.append(traj)
-        self.i = self.i + 1
-        if self.i >= self.iterations:
-            return self.success("Planned trajectory: {}".format(self.params["Trajectory"].getValues()))
-        else:
-            return self.step("Planned trajectory: {}".format(self.params["Trajectory"].getValues()))
+        self.params["Index"].value = self.params["Index"].value + 1
+        return self.step("Planned trajectory: {}".format(self.params["Trajectory"].getValues()))
 
 
 class async_trajectory_generator(PrimitiveBase):
