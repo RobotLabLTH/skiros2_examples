@@ -9,9 +9,7 @@ from skiros2_common.core.world_element import Element
 
 class TrajectoryCoordinator(SkillDescription):
     def createDescription(self):
-        # =======Params=========
-        self.addParam("Pose", Element("skiros:TransformationPose"), ParamTypes.Optional)
-        self.addParam("Pose2", Element("skiros:TransformationPose"), ParamTypes.Optional)
+        pass
 
 #################################################################################
 # Implementation
