@@ -18,4 +18,5 @@
   <run_depend>skiros2_msgs</run_depend>
   <run_depend>skiros2_common</run_depend>
   <run_depend>skiros2_skill</run_depend>
+  <run_depend>turtlesim</run_depend>
 </package>
